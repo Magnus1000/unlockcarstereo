@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const orderID = queryParams.get('order_id');
     if (orderID) {
       const pageViewData = { orderID: orderID, event: "page_view" };
-      axios.post('/api/sendWebhook', pageViewData)
+      axios.post('https://unlockcarstereo-magnus1000team.vercel.app/api/sendPageview.js', pageViewData)
         .then(response => console.log('Success:', response.data))
         .catch(error => console.error('Error:', error));
     } else {
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
       // Send data to serverless function
       try {
-        const response = await axios.post('/api/resubmitSerial', resubmitData);
+        const response = await axios.post('https://unlockcarstereo-magnus1000team.vercel.app/api/submitForm.js', resubmitData);
         if (response.status === 200) {
           // Redirect on success
           window.location.href = 'https://www.unlockcarstereo.com/success';
