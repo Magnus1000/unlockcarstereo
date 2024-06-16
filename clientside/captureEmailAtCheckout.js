@@ -15,10 +15,7 @@ document.getElementById('wf-ecom-email').addEventListener('change', function(eve
         return; // Exit the function if the email is not valid
     }
 
-    const serverlessFunctionUrl = 'https://your-vercel-project-url/api/createEvents';
-
-    // Generate event time in ISO format
-    const event_time = new Date().toISOString();
+    const serverlessFunctionUrl = 'https://unlockcarstereo-magnus1000team.vercel.app/api/createUserEvent.js';
 
     // Add the URL to the event data
     const event_page = '/checkout'; // Assuming 'url' should be the current page URL
@@ -34,7 +31,6 @@ document.getElementById('wf-ecom-email').addEventListener('change', function(eve
             serial: numbers.serial,
             vin: numbers.vin
         }),
-        event_time,
         event_type: "email_capture",
         event_page,
     };
