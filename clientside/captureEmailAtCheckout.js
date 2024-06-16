@@ -6,43 +6,33 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     emailField.addEventListener('change', function(event) {
-
-        // Attempt to retrieve the uuid from cookies
         let uuid = Cookies.get('uuid');
 
-        // If uuid doesn't exist, generate a new one and store it in cookies
         if (!uuid) {
             uuid = generateUUID();
-            Cookies.set('uuid', uuid, { expires: 365 }); // Store uuid in cookies with a 1-year expiration
+            Cookies.set('uuid', uuid, { expires: 365 });
         }
 
         const emailInput = event.target.value;
 
         if (!emailInput.includes('@')) {
             console.error('Invalid email address:', emailInput);
-            return; // Exit the function if the email is not valid
+            return;
         }
 
         const serverlessFunctionUrl = 'https://unlockcarstereo-magnus1000team.vercel.app/api/createUserEvent.js';
-
-        // Generate event time in ISO format
         const event_time = new Date().toISOString();
-
-        // Add the URL to the event data
-        const event_page = '/checkout'; // Assuming 'url' should be the current page URL
+        const event_page = '/checkout';
         console.log('Event page:', event_page);
 
-        // Retrieve serial info from sessionStorage
         const numbers = JSON.parse(sessionStorage.getItem('numbers'));
 
-        // Check if numbers is null or undefined
         if (!numbers) {
             // Handle the case where numbers is null or undefined
         } else {
             // Proceed with operations on numbers object
         }
 
-        // Define the event data with serial number and VIN included in event_content as JSON
         const eventData = {
             uuid,
             event_content: JSON.stringify({
@@ -66,17 +56,17 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.json();
         })
         .then(data => {
-
+            // Handle success
         })
         .catch((error) => {
-
+            // Handle error
         });
+    });
 
     function generateUUID() {
-        // Implement your UUID generation logic here
         return 'xxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
     }
-});
+}); // This closing brace matches with document.addEventListener
