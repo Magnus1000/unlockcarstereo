@@ -37,10 +37,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Check if numbers is null or undefined
         if (!numbers) {
-            console.error('Numbers object is null or undefined.');
+            // Handle the case where numbers is null or undefined
         } else {
-            // Log individual properties if numbers is not null/undefined
-            console.log('Serial:', numbers.serial, 'VIN:', numbers.vin);
+            // Proceed with operations on numbers object
         }
 
         // Define the event data with serial number and VIN included in event_content as JSON
