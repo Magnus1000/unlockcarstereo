@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const emailField = document.getElementById('wf-ecom-email');
+    console.log('Email input field:', emailField);
     
     if (!emailField) {
         console.error('Email input field not found');
