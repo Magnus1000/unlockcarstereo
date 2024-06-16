@@ -1,28 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
     const emailField = document.getElementById('wf-ecom-email');
-    console.log('Email input field:', emailField);
     
     if (!emailField) {
-        console.error('Email input field not found');
         return;
     }
 
     emailField.addEventListener('change', function(event) {
-        console.log('Email input change event triggered');
 
         // Attempt to retrieve the uuid from cookies
         let uuid = Cookies.get('uuid');
-        console.log('Retrieved uuid from cookies:', uuid);
 
         // If uuid doesn't exist, generate a new one and store it in cookies
         if (!uuid) {
             uuid = generateUUID();
             Cookies.set('uuid', uuid, { expires: 365 }); // Store uuid in cookies with a 1-year expiration
-            console.log('Generated and stored new uuid:', uuid);
         }
 
         const emailInput = event.target.value;
-        console.log('Email input value:', emailInput);
 
         if (!emailInput.includes('@')) {
             console.error('Invalid email address:', emailInput);
@@ -30,11 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const serverlessFunctionUrl = 'https://unlockcarstereo-magnus1000team.vercel.app/api/createUserEvent.js';
-        console.log('Serverless function URL:', serverlessFunctionUrl);
 
         // Generate event time in ISO format
         const event_time = new Date().toISOString();
-        console.log('Event time:', event_time);
 
         // Add the URL to the event data
         const event_page = '/checkout'; // Assuming 'url' should be the current page URL
@@ -42,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Retrieve serial info from sessionStorage
         const numbers = JSON.parse(sessionStorage.getItem('numbers'));
-        console.log('Retrieved numbers from sessionStorage:', numbers);
 
         // Check if numbers is null or undefined
         if (!numbers) {
@@ -64,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function() {
             event_type: "email_capture",
             event_page,
         };
-        console.log('Event data:', eventData);
 
         fetch(serverlessFunctionUrl, {
             method: 'POST',
@@ -74,16 +64,14 @@ document.addEventListener('DOMContentLoaded', function() {
             body: JSON.stringify(eventData),
         })
         .then(response => {
-            console.log('Fetch response:', response);
             return response.json();
         })
         .then(data => {
-            console.log('Success:', data);
+
         })
         .catch((error) => {
-            console.error('Error:', error);
+
         });
-    });
 
     function generateUUID() {
         // Implement your UUID generation logic here
