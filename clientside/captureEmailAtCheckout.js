@@ -1,35 +1,56 @@
-// Step 1: Add an event listener to the field with ID 'wf-ecom-email'
 document.getElementById('wf-ecom-email').addEventListener('change', function(event) {
-    // Step 2: Capture the input value
+    // Attempt to retrieve the uuid from cookies
+    let uuid = Cookies.get('uuid');
+
+    // If uuid doesn't exist, generate a new one and store it in cookies
+    if (!uuid) {
+        uuid = generateUUID();
+        Cookies.set('uuid', uuid, { expires: 365 }); // Store uuid in cookies with a 1-year expiration
+    }
+
     const emailInput = event.target.value;
 
-    // Check if the email input is a valid email before sending
     if (!emailInput.includes('@')) {
         console.error('Invalid email address.');
         return; // Exit the function if the email is not valid
     }
 
-    // Step 3: Define the URL of the Vercel serverless function
     const serverlessFunctionUrl = 'https://your-vercel-project-url/api/createEvents';
 
-    // Step 4: Create the data object to be sent
-    const dataToSend = {
-        email: emailInput
+    // Generate event time in ISO format
+    const event_time = new Date().toISOString();
+
+    // Add the URL to the event data
+    const event_page = '/checkout'; // Assuming 'url' should be the current page URL
+
+    // Retrieve serial info from sessionStorage
+    const numbers = JSON.parse(sessionStorage.getItem('numbers'));
+
+    // Define the event data with serial number and VIN included in event_content as JSON
+    const eventData = {
+        uuid,
+        event_content: JSON.stringify({
+            email: emailInput,
+            serial: numbers.serial,
+            vin: numbers.vin
+        }),
+        event_time,
+        event_type: "email_capture",
+        event_page,
     };
 
-    // Step 5: Use fetch API to send the data to the serverless function
     fetch(serverlessFunctionUrl, {
-        method: 'POST', // Use POST method
+        method: 'POST',
         headers: {
-            'Content-Type': 'application/json', // Specify the content type as JSON
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify(dataToSend), // Convert the JavaScript object to a JSON string
+        body: JSON.stringify(eventData),
     })
-    .then(response => response.json()) // Convert the response to JSON
+    .then(response => response.json())
     .then(data => {
-        console.log('Success:', data); // Log success message and data
+        console.log('Success:', data);
     })
     .catch((error) => {
-        console.error('Error:', error); // Log any errors
+        console.error('Error:', error);
     });
 });
