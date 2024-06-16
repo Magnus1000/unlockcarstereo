@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const serverlessFunctionUrl = 'https://unlockcarstereo-magnus1000team.vercel.app/api/createUserEvent.js';
         const event_time = new Date().toISOString();
         const event_page = '/checkout';
-        console.log('Event page:', event_page);
 
         const numbers = JSON.parse(sessionStorage.getItem('numbers'));
 
