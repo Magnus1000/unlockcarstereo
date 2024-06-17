@@ -23,21 +23,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const serverlessFunctionUrl = 'https://unlockcarstereo-magnus1000team.vercel.app/api/createUserEvent.js';
         const event_time = new Date().toISOString();
         const event_page = '/checkout';
+        const browserLanguage = navigator.language || navigator.userLanguage; // Capture the user's browser language
 
         const numbers = JSON.parse(sessionStorage.getItem('numbers'));
-
-        if (!numbers) {
-            // Handle the case where numbers is null or undefined
-        } else {
-            // Proceed with operations on numbers object
-        }
 
         const eventData = {
             uuid,
             event_content: JSON.stringify({
                 email: emailInput,
                 serial: numbers ? numbers.serial : 'undefined',
-                vin: numbers ? numbers.vin : 'undefined'
+                vin: numbers ? numbers.vin : 'undefined',
+                language: browserLanguage // Include the browser language in the event content
             }),
             event_time,
             event_type: "email_capture",
@@ -68,4 +64,4 @@ document.addEventListener('DOMContentLoaded', function() {
             return v.toString(16);
         });
     }
-}); // This closing brace matches with document.addEventListener
+});
