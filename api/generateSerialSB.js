@@ -69,7 +69,7 @@ async function getHighestSerialNumber() {
 
 // Function to insert records into Supabase in batches
 async function insertRecords(start, count) {
-    const batchSize = 10000; // Adjust batch size based on your testing and Supabase limits
+    const batchSize = 100000; // Adjust batch size based on your testing and Supabase limits
     for (let i = start; i < start + count; i += batchSize) {
         const batch = [];
         for (let j = i; j < i + batchSize && j < start + count; j++) {
@@ -100,7 +100,7 @@ module.exports = async (req, res) => {
         try {
             const highestSerial = await getHighestSerialNumber();
             const startSerial = highestSerial + 1;
-            const totalRecords = parseInt(req.query.totalRecords) || 10000; // Adjust for testing
+            const totalRecords = parseInt(req.query.totalRecords) || 100000; // Adjust for testing
 
             await insertRecords(startSerial, totalRecords);
             res.status(200).send('Insertion complete');
