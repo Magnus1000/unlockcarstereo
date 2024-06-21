@@ -100,7 +100,7 @@ module.exports = async (req, res) => {
         try {
             const highestSerial = await getHighestSerialNumber();
             const startSerial = highestSerial + 1;
-            const totalRecords = parseInt(req.query.totalRecords) || 1000; // Adjust for testing
+            const totalRecords = parseInt(req.query.totalRecords) || 10000; // Adjust for testing
 
             await insertRecords(startSerial, totalRecords);
             res.status(200).send('Insertion complete');
