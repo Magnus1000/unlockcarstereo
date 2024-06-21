@@ -45,7 +45,6 @@ function calculateScore(serial) {
     return score;
 }
 
-// Function to get the highest serial number in the table
 async function getHighestSerialNumber() {
     const { data, error } = await supabase
         .from('serial_numbers')
@@ -55,8 +54,14 @@ async function getHighestSerialNumber() {
         .single();
 
     if (error) {
-        console.error('Error fetching highest serial number:', error);
-        throw error;
+        // Check if the error is because of no rows found
+        if (error.code === 'PGRST116' && error.details.includes('The result contains 0 rows')) {
+            console.log('No serial numbers found, starting from default.');
+            return 9999999; // Default start value if no serial numbers are present
+        } else {
+            console.error('Error fetching highest serial number:', error);
+            throw error;
+        }
     }
 
     return data ? parseInt(data.serial_number) : 9999999; // If no data, start from 10000000
