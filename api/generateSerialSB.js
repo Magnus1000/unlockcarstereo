@@ -1,4 +1,5 @@
 const { createClient } = require('@supabase/supabase-js');
+const cors = require('cors')({origin: true});
 
 // Supabase client setup using environment variables from Vercel
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -44,6 +45,23 @@ function calculateScore(serial) {
     return score;
 }
 
+// Function to get the highest serial number in the table
+async function getHighestSerialNumber() {
+    const { data, error } = await supabase
+        .from('serial_numbers')
+        .select('serial_number')
+        .order('serial_number', { ascending: false })
+        .limit(1)
+        .single();
+
+    if (error) {
+        console.error('Error fetching highest serial number:', error);
+        throw error;
+    }
+
+    return data ? parseInt(data.serial_number) : 9999999; // If no data, start from 10000000
+}
+
 // Function to insert records into Supabase in batches
 async function insertRecords(start, count) {
     const batchSize = 1000; // Adjust batch size based on your testing and Supabase limits
@@ -71,9 +89,19 @@ async function insertRecords(start, count) {
     }
 }
 
-// Start inserting records from 10000000 to 109999999
-const startSerial = 10000000;
-const totalRecords = 49999999;
-insertRecords(startSerial, totalRecords)
-    .then(() => console.log('Insertion complete'))
-    .catch(err => console.error('Error during insertion:', err));
+// Exported function to handle HTTP requests
+module.exports = async (req, res) => {
+    cors(req, res, async () => {
+        try {
+            const highestSerial = await getHighestSerialNumber();
+            const startSerial = highestSerial + 1;
+            const totalRecords = parseInt(req.query.totalRecords) || 1000; // Adjust for testing
+
+            await insertRecords(startSerial, totalRecords);
+            res.status(200).send('Insertion complete');
+        } catch (err) {
+            console.error('Error during insertion:', err);
+            res.status(500).send('Error during insertion');
+        }
+    });
+};
